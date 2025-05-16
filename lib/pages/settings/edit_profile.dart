@@ -16,7 +16,7 @@ class EditProfilePage extends StatelessWidget {
       ),
       body: const Center(
         child: Text("Edit Profile Screen"),
-      ),
+      ), 
     );
   }
 }

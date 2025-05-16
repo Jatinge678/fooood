@@ -1,9 +1,42 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutterdelivery1/pages/home.dart'; // <-- Import your home.dart
+import 'package:flutterdelivery1/pages/signup.dart';
+import 'package:http/http.dart' as http;
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> login() async {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:5002/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': _emailController.text,
+        'password': _passwordController.text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login failed')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +79,11 @@ class LoginPage extends StatelessWidget {
               elevation: 4,
               borderRadius: BorderRadius.circular(10),
               child: TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   hintText: 'Email',
-                  prefixIcon: const Icon(Iconsax.direct_right, color: Colors.deepOrange),
+                  prefixIcon: const Icon(Iconsax.direct_right,
+                      color: Colors.deepOrange),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -66,10 +101,12 @@ class LoginPage extends StatelessWidget {
               elevation: 4,
               borderRadius: BorderRadius.circular(10),
               child: TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Password',
-                  prefixIcon: const Icon(Iconsax.lock, color: Colors.deepOrange),
+                  prefixIcon:
+                      const Icon(Iconsax.lock, color: Colors.deepOrange),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -87,12 +124,7 @@ class LoginPage extends StatelessWidget {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()), // <-- Navigate to HomePage
-                  );
-                },
+                onPressed: login,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.deepOrange,
                   shape: RoundedRectangleBorder(
@@ -118,7 +150,10 @@ class LoginPage extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    // TODO: Navigate to signup page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SignUp()),
+                    );
                   },
                   child: const Text(
                     'Sign Up',
@@ -133,4 +168,3 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
-

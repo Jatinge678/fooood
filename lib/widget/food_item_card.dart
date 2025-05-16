@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 class FoodItemCard extends StatelessWidget {
   final String name;
-  final String price;
+  final int price;
   final double rating;
   final String imageUrl;
+  final bool showFavorite;
+  final bool showStar;
+  final VoidCallback? onOrderNow;
 
   const FoodItemCard({
     super.key,
@@ -12,6 +15,9 @@ class FoodItemCard extends StatelessWidget {
     required this.price,
     required this.rating,
     required this.imageUrl,
+    this.showFavorite = false,
+    this.showStar = false,
+    this.onOrderNow,
   });
 
   @override
@@ -35,31 +41,49 @@ class FoodItemCard extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                top: 8,
-                left: 8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.star, size: 14, color: Colors.amber[700]),
-                      const SizedBox(width: 2),
-                      Text(
-                        rating.toString(),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+              if (showStar)
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.star, size: 14, color: Colors.amber[700]),
+                        const SizedBox(width: 2),
+                        Text(
+                          rating.toString(),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              if (showFavorite)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.favorite,
+                      size: 16,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
             ],
           ),
           Padding(
@@ -77,7 +101,7 @@ class FoodItemCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  price,
+                  '₹$price',
                   style: const TextStyle(
                     color: Colors.deepOrange,
                     fontWeight: FontWeight.bold,
@@ -87,7 +111,7 @@ class FoodItemCard extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: onOrderNow,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepOrange,
                       foregroundColor: Colors.white,

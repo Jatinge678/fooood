@@ -5,6 +5,9 @@ class RestaurantCard extends StatelessWidget {
   final double rating;
   final String deliveryTime;
   final String imageUrl;
+  final bool showFavorite;
+  final bool showStar;
+  final VoidCallback? onOrderNow;
 
   const RestaurantCard({
     super.key,
@@ -12,6 +15,9 @@ class RestaurantCard extends StatelessWidget {
     required this.rating,
     required this.deliveryTime,
     required this.imageUrl,
+    required this.showFavorite,
+    required this.showStar,
+    this.onOrderNow,
   });
 
   @override
@@ -44,22 +50,23 @@ class RestaurantCard extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.favorite_border,
-                    size: 20,
-                    color: Colors.deepOrange,
+              if (showFavorite)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.favorite_border,
+                      size: 20,
+                      color: Colors.deepOrange,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
           Padding(
@@ -77,29 +84,30 @@ class RestaurantCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(Icons.star, size: 16, color: Colors.amber[700]),
-                    const SizedBox(width: 4),
-                    Text(
-                      rating.toString(),
-                      style: TextStyle(
-                        color: Colors.grey[800],
-                        fontWeight: FontWeight.bold,
+                if (showStar)
+                  Row(
+                    children: [
+                      Icon(Icons.star, size: 16, color: Colors.amber[700]),
+                      const SizedBox(width: 4),
+                      Text(
+                        rating.toString(),
+                        style: TextStyle(
+                          color: Colors.grey[800],
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Icon(Icons.timer, size: 16, color: Colors.grey[500]),
-                    const SizedBox(width: 4),
-                    Text(
-                      deliveryTime,
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
+                      const SizedBox(width: 8),
+                      Icon(Icons.timer, size: 16, color: Colors.grey[500]),
+                      const SizedBox(width: 4),
+                      Text(
+                        deliveryTime,
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
                 const SizedBox(height: 8),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: onOrderNow,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepOrange,
                     foregroundColor: Colors.white,

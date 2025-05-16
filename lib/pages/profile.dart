@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'saved_addresses.dart';
+// ignore: unused_import
+import 'settings/saved_addresses.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -124,7 +125,7 @@ class _ProfileState extends State<Profile> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Handle logout
+                        Navigator.pushReplacementNamed(context, '/login');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,

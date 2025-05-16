@@ -2,34 +2,36 @@ import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:iconsax/iconsax.dart';
 
-class Order extends StatefulWidget {
-  const Order({super.key});
+class OrderPage extends StatefulWidget {
+  final String name;
+  final int price;
+  final IconData icon;
+
+  const OrderPage({super.key, required this.name, required this.price, required this.icon});
 
   @override
-  State<Order> createState() => _OrderState();
+  State<OrderPage> createState() => _OrderPageState();
 }
 
-class _OrderState extends State<Order> {
-  final List<Map<String, dynamic>> _activeOrders = [
-    {
-      'id': '#FD-784512',
-      'restaurant': 'Burger King',
-      'status': 'On the way',
-      'items': 3,
-      'total': 24.99,
-      'time': '25-30 min',
-      'image': 'assets/burger_king.jpg',
-    },
-    {
-      'id': '#FD-784513',
-      'restaurant': 'Pizza Hut',
-      'status': 'Preparing',
-      'items': 2,
-      'total': 18.50,
-      'time': '40-45 min',
-      'image': 'assets/pizza_hut.jpg',
-    },
-  ];
+class _OrderPageState extends State<OrderPage> {
+  late List<Map<String, dynamic>> _activeOrders;
+
+  @override
+  void initState() {
+    super.initState();
+    _activeOrders = [
+      {
+        'id': '#FD-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}',
+        'restaurant': widget.name,
+        'status': 'Preparing',
+        'items': 1,
+        'total': widget.price.toDouble(),
+        'time': '25-30 min',
+        'image': null,
+        'icon': widget.icon,
+      },
+    ];
+  }
 
   final List<Map<String, dynamic>> _pastOrders = [
     {
@@ -38,7 +40,8 @@ class _OrderState extends State<Order> {
       'date': 'Today, 12:30 PM',
       'items': 4,
       'total': 32.75,
-      'image': 'assets/mcdonalds.jpg',
+      'image': null,
+      'icon': Icons.fastfood,
     },
     {
       'id': '#FD-784509',
@@ -46,7 +49,8 @@ class _OrderState extends State<Order> {
       'date': 'Yesterday, 7:45 PM',
       'items': 2,
       'total': 22.40,
-      'image': 'assets/kfc.jpg',
+      'image': null,
+      'icon': Icons.lunch_dining,
     },
   ];
 
@@ -138,15 +142,21 @@ class _OrderState extends State<Order> {
           children: [
             Row(
               children: [
-                // Restaurant Image
+                // Restaurant Image or Icon
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    order['image'],
-                    width: 60,
-                    height: 60,
-                    fit: BoxFit.cover,
-                  ),
+                  child: order['image'] != null
+                      ? Image.asset(
+                          order['image'],
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        )
+                      : CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.orange.shade50,
+                          child: Icon(order['icon'], color: Colors.deepOrange),
+                        ),
                 ),
                 const SizedBox(width: 12),
                 // Order Info
